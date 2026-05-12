@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title> 🚀 Dashboard</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@200..700" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: '#f7f9fb',
+            surface: '#ffffff',
+            surfaceLow: '#f2f4f6',
+            surfaceMid: '#eceef0',
+            outline: '#c3c6d7',
+            primary: '#004ac6',
+            primarySoft: '#2563eb',
+            text: '#191c1e',
+            textSoft: '#434655',
+            secondary: '#505f76',
+            success: '#22c55e',
+          },
+          fontFamily: {
+            display: ['Manrope', 'sans-serif'],
+            body: ['Inter', 'sans-serif']
+          },
+          boxShadow: {
+            card: '0px 4px 12px rgba(0,0,0,0.03)',
+            hover: '0px 8px 24px rgba(0,0,0,0.06)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *{
+      transition:
+        background-color .25s ease,
+        color .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease,
+        transform .2s ease;
+    }
+
+    body{
+      font-family: Inter, sans-serif;
+    }
+
+    .material-symbols-outlined{
+      font-variation-settings:
+      'FILL' 0,
+      'wght' 500,
+      'GRAD' 0,
+      'opsz' 24;
+    }
+
+    .scrollbar::-webkit-scrollbar{
+      width:6px;
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb{
+      background:#d1d5db;
+      border-radius:999px;
+    }
+
+    .bookmark-card:hover{
+      transform: translateY(-2px);
+    }
+
+    .bookmark-card:active{
+      transform: scale(.97);
+    }
+
+    .theme-blue{
+      --accent:#004ac6;
+    }
+
+    .accent-bg{
+      background:var(--accent);
+    }
+
+    .accent-text{
+      color:var(--accent);
+    }
+
+    .focus-ring:focus{
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.08);
+    }
+
+    .bookmark-scroll{
+      max-height: 860px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 6px;
+    }
+
+    .bookmark-grid{
+      display:grid;
+      grid-template-columns: repeat(5, minmax(0,1fr));
+      gap:16px;
+    }
+
+    @media(max-width:1024px){
+      .bookmark-grid{
+        grid-template-columns: repeat(4, minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:768px){
+      .bookmark-grid{
+        grid-template-columns: repeat(3, minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:520px){
+      .bookmark-grid{
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    /* Specific Dark Mode overrides for non-tailwind custom properties */
+    .dark body { background-color: #0f172a; color: #f8fafc; }
+    .dark .accent-text { color: #60a5fa; }
+  </style>
+</head>
+
+<body class="bg-background dark:bg-slate-900 text-text dark:text-slate-100 min-h-screen theme-blue">
+
+<div class="max-w-[1200px] mx-auto px-5 md:px-10 py-8">
+
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-12">
+
+    <div class="flex items-center gap-6">
+      <div class="relative">
+        <img
+          src="https://i.pravatar.cc/200?img=12"
+          class="w-20 h-20 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-card"
+        >
+        <div class="absolute bottom-1 right-1 w-5 h-5 bg-success rounded-full border-2 border-white dark:border-slate-800"></div>
+      </div>
+
+      <div>
+        <h1 id="greetingText" class="font-display text-4xl font-bold tracking-tight">
+          Welcome back, Alex
+        </h1>
+        <p class="text-textSoft dark:text-slate-400 text-lg mt-1">
+          Your workspace is ready for deep work.
+        </p>
+        <p id="liveTime" class="text-sm text-secondary dark:text-slate-500 mt-2"></p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <div class="relative hidden md:block">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-secondary">search</span>
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search bookmarks..."
+          class="w-[260px] pl-12 pr-4 py-3 rounded-xl border border-outline dark:border-slate-700 bg-surface dark:bg-slate-800 shadow-card focus-ring outline-none"
+        >
+      </div>
+
+      <div class="flex items-center gap-1 bg-surface dark:bg-slate-800 border border-outline dark:border-slate-700 rounded-full p-1 shadow-card">
+        <button id="lightBtn" class="w-10 h-10 rounded-full flex items-center justify-center transition-all">
+          <span class="material-symbols-outlined">light_mode</span>
+        </button>
+        <button id="darkBtn" class="w-10 h-10 rounded-full flex items-center justify-center transition-all">
+          <span class="material-symbols-outlined">dark_mode</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <section class="lg:col-span-7 flex flex-col">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-display text-3xl font-semibold">Quick Access</h2>
+        <button id="newBookmarkBtn" class="accent-text flex items-center gap-1 font-medium hover:underline">
+          <span class="material-symbols-outlined text-[20px]">add</span>
+          New Bookmark
+        </button>
+      </div>
+
+      <div class="bookmark-scroll scrollbar">
+        <div id="bookmarkGrid" class="bookmark-grid"></div>
+      </div>
+    </section>
+
+    <section class="lg:col-span-5 flex flex-col">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-display text-3xl font-semibold">Notes</h2>
+        <button id="downloadNotes" class="text-secondary dark:text-slate-400 hover:text-black dark:hover:text-white">
+          <span class="material-symbols-outlined">download</span>
+        </button>
+      </div>
+
+      <div class="relative flex-1 min-h-[700px] bg-surface dark:bg-slate-800 border border-outline dark:border-slate-700 rounded-2xl shadow-card overflow-hidden">
+        <textarea
+          id="notesArea"
+          placeholder="Start typing your focus for today..."
+          class="w-full h-full resize-none bg-transparent outline-none p-6 text-lg text-text dark:text-slate-200 placeholder:text-secondary"
+        ></textarea>
+
+        <div class="absolute bottom-4 right-4 flex items-center gap-4">
+          <div class="text-xs text-secondary dark:text-slate-400 flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px] animate-pulse">sync</span>
+            <span id="saveStatus">Auto-saving...</span>
+          </div>
+          <button id="clearNotes" class="w-10 h-10 rounded-xl bg-surfaceLow dark:bg-slate-700 hover:bg-surfaceMid dark:hover:bg-slate-600 flex items-center justify-center">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+        </div>
+      </div>
+      <p class="text-center text-sm text-secondary dark:text-slate-500 mt-4">
+        Your notes are stored locally and will persist until cleared.
+      </p>
+    </section>
+  </div>
+</div>
+
+<div id="modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 items-center justify-center p-5">
+  <div class="bg-surface dark:bg-slate-800 rounded-2xl border border-outline dark:border-slate-700 shadow-hover p-6 w-full max-w-md">
+    <h3 id="modalTitle" class="font-display text-2xl font-semibold mb-6 dark:text-white">Add Bookmark</h3>
+    <div class="space-y-4">
+      <div>
+        <label class="block mb-2 text-sm font-medium dark:text-slate-300">Name</label>
+        <input id="bookmarkName" type="text" class="w-full rounded-xl border border-outline dark:border-slate-700 dark:bg-slate-900 p-3 outline-none focus-ring">
+      </div>
+      <div>
+        <label class="block mb-2 text-sm font-medium dark:text-slate-300">URL</label>
+        <input id="bookmarkUrl" type="url" placeholder="https://example.com" class="w-full rounded-xl border border-outline dark:border-slate-700 dark:bg-slate-900 p-3 outline-none focus-ring">
+      </div>
+      <div class="flex justify-end gap-3 pt-4">
+        <button id="cancelModal" class="px-5 py-3 rounded-xl bg-surfaceLow dark:bg-slate-700 hover:bg-surfaceMid dark:hover:bg-slate-600">Cancel</button>
+        <button id="saveBookmark" class="px-5 py-3 rounded-xl accent-bg text-white">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // =========================
+  // DEFAULT BOOKMARKS
+  // =========================
+  const defaultBookmarks = [
+    {name:'Qwen', url:'https://chat.qwen.ai/'},
+    {name:'NotebookLM', url:'https://notebooklm.google.com/?icid=home_maincta&pli=1&authuser=2&pageId=none'},
+    {name:'CV Job Matcher', url:'https://www.myjobmag.co.ke/cv-match'},
+    {name:'Fuzu', url:'https://www.fuzu.com/job?page=1&filters[job_id]=828629'},
+    {name:'ATS Analyzer', url:'https://resume-ats-mu.vercel.app/'},
+    {name:'Yahoo Mail', url:'https://mail.yahoo.com/n/inbox/priority?.src=ym&reason=myc'},
+    {name:'Notion', url:'https://www.notion.so/CV-7cba2ea3d47841899c697ba2b3209b3a?pvs=10'},
+    {name:'NetMirror', url:'https://net22.cc/home'},
+    {name:'Matches', url:'https://app.manatal.com/matches'},
+    {name:'SkillsBuild Assessment', url:'https://assessment.skillsbuild.org/?utm_campaign=ai-level-up'},
+    {name:'AI SkillsBuild', url:'https://skills.yourlearning.ibm.com/activity/ALM-COURSE_4061811?planId=PLAN-BA0D92BE45DD&sectionId=SECTION-A'},
+    {name:'Training Overview', url:'https://alm.ibm.com/ibm-skillsbuildadult/trainingId/course:4061811/'},
+    {name:'Excalidraw', url:'https://excalidraw.com/'},
+    {name:'ERPNext GitHub', url:'https://github.com/frappe/erpnext'},
+    {name:'ERPNext README', url:'https://github.com/frappe/erpnext/blob/develop/README.md'},
+    {name:'Pleaach Careers', url:'https://pleaach.careers-page.com/'},
+    {name:'The Pirate Bay', url:'https://thepiratebay.org/index.html'},
+    {name:'ARENA AI', url:'https://arena.ai/code/direct'},
+    {name:'DeepInfra Chat', url:'https://deepinfra.com/chat'},
+    {name:'No-Cost AI', url:'https://github.com/zebbern/no-cost-ai'}
+  ];
+
+  let bookmarks = JSON.parse(localStorage.getItem('sereneBookmarks'));
+  if(!bookmarks || bookmarks.length === 0){
+    bookmarks = defaultBookmarks;
+    localStorage.setItem('sereneBookmarks', JSON.stringify(bookmarks));
+  }
+
+  let editIndex = null;
+  const grid = document.getElementById('bookmarkGrid');
+  const modal = document.getElementById('modal');
+  const notesArea = document.getElementById('notesArea');
+
+  // =========================
+  // RENDER BOOKMARKS
+  // =========================
+  function renderBookmarks(filter = '') {
+    grid.innerHTML = '';
+    const filtered = bookmarks.filter(b => b.name.toLowerCase().includes(filter.toLowerCase()));
+
+    filtered.forEach((bookmark, index) => {
+      let hostname = '';
+      try { hostname = new URL(bookmark.url).hostname; } catch { hostname = ''; }
+
+      const card = document.createElement('div');
+      card.className = `bookmark-card group relative bg-surface dark:bg-slate-800 border border-outline dark:border-slate-700 rounded-2xl shadow-card hover:shadow-hover overflow-hidden`;
+      card.innerHTML = `
+        <a href="${bookmark.url}" target="_blank" class="aspect-square flex flex-col items-center justify-center gap-3 p-4">
+          <div class="w-14 h-14 rounded-2xl bg-surfaceLow dark:bg-slate-700 flex items-center justify-center overflow-hidden">
+            <img src="https://www.google.com/s2/favicons?sz=128&domain=${hostname}" class="w-8 h-8" onerror="this.src='https://www.google.com/s2/favicons?sz=128&domain=google.com'">
+          </div>
+          <span class="text-xs font-medium text-center line-clamp-2 dark:text-slate-300">${bookmark.name}</span>
+        </a>
+        <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100">
+           <button onclick="openEdit(${index})" class="w-7 h-7 rounded-lg bg-white/90 dark:bg-slate-600 shadow flex items-center justify-center">
+            <span class="material-symbols-outlined text-[16px]">edit</span>
+          </button>
+          <button onclick="deleteBookmark(${index})" class="w-7 h-7 rounded-lg bg-red-50/90 dark:bg-red-900/90 shadow flex items-center justify-center">
+            <span class="material-symbols-outlined text-[16px] text-red-600 dark:text-red-200">delete</span>
+          </button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+    localStorage.setItem('sereneBookmarks', JSON.stringify(bookmarks));
+  }
+
+  renderBookmarks();
+
+  document.getElementById('searchInput').addEventListener('input', e => renderBookmarks(e.target.value));
+
+  // =========================
+  // MODAL
+  // =========================
+  document.getElementById('newBookmarkBtn').addEventListener('click', () => {
+    editIndex = null;
+    document.getElementById('modalTitle').innerText = 'Add Bookmark';
+    document.getElementById('bookmarkName').value = '';
+    document.getElementById('bookmarkUrl').value = '';
+    modal.classList.replace('hidden', 'flex');
+  });
+
+  function openEdit(index){
+    editIndex = index;
+    const b = bookmarks[index];
+    document.getElementById('modalTitle').innerText = 'Edit Bookmark';
+    document.getElementById('bookmarkName').value = b.name;
+    document.getElementById('bookmarkUrl').value = b.url;
+    modal.classList.replace('hidden', 'flex');
+  }
+
+  function closeModal(){ modal.classList.replace('flex', 'hidden'); }
+  document.getElementById('cancelModal').addEventListener('click', closeModal);
+
+  document.getElementById('saveBookmark').addEventListener('click', () => {
+    const name = document.getElementById('bookmarkName').value.trim();
+    let url = document.getElementById('bookmarkUrl').value.trim();
+    if(!name || !url) return alert('Please fill all fields.');
+    if(!url.startsWith('http') && !url.startsWith('file')) url = 'https://' + url;
+    
+    if(editIndex === null) bookmarks.push({name, url});
+    else bookmarks[editIndex] = {name, url};
+    
+    renderBookmarks();
+    closeModal();
+  });
+
+  function deleteBookmark(index){
+    if(confirm('Delete this bookmark?')) {
+      bookmarks.splice(index, 1);
+      renderBookmarks();
+    }
+  }
+
+  // =========================
+  // NOTES & TAB INDENT
+  // =========================
+  notesArea.value = localStorage.getItem('sereneNotes') || '';
+  notesArea.addEventListener('keydown', function(e){
+    if(e.key === 'Tab'){
+      e.preventDefault();
+      const start = this.selectionStart;
+      const end = this.selectionEnd;
+      const tabSpace = "    "; 
+      this.value = this.value.substring(0, start) + tabSpace + this.value.substring(end);
+      this.selectionStart = this.selectionEnd = start + tabSpace.length;
+    }
+  });
+
+  let saveTimer;
+  notesArea.addEventListener('input', () => {
+    document.getElementById('saveStatus').innerText = 'Saving...';
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      localStorage.setItem('sereneNotes', notesArea.value);
+      document.getElementById('saveStatus').innerText = 'Saved locally';
+    }, 400);
+  });
+
+  document.getElementById('downloadNotes').addEventListener('click', () => {
+    const blob = new Blob([notesArea.value], {type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'focus-notes.txt';
+    a.click();
+  });
+
+  document.getElementById('clearNotes').addEventListener('click', () => {
+    if(confirm('Clear all notes?')) { notesArea.value = ''; localStorage.removeItem('sereneNotes'); }
+  });
+
+  // =========================
+  // DARK MODE FIX
+  // =========================
+  const lightBtn = document.getElementById('lightBtn');
+  const darkBtn = document.getElementById('darkBtn');
+
+  function updateThemeUI(isDark) {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      darkBtn.classList.add('accent-bg', 'text-white');
+      darkBtn.classList.remove('text-secondary');
+      lightBtn.classList.remove('accent-bg', 'text-white');
+      lightBtn.classList.add('text-secondary');
+    } else {
+      document.documentElement.classList.remove('dark');
+      lightBtn.classList.add('accent-bg', 'text-white');
+      lightBtn.classList.remove('text-secondary');
+      darkBtn.classList.remove('accent-bg', 'text-white');
+      darkBtn.classList.add('text-secondary');
+    }
+  }
+
+  lightBtn.addEventListener('click', () => {
+    localStorage.setItem('themeMode', 'light');
+    updateThemeUI(false);
+  });
+
+  darkBtn.addEventListener('click', () => {
+    localStorage.setItem('themeMode', 'dark');
+    updateThemeUI(true);
+  });
+
+  // Initial check
+  const savedTheme = localStorage.getItem('themeMode') || 'light';
+  updateThemeUI(savedTheme === 'dark');
+
+  // =========================
+  // LIVE TIME & GREETING
+  // =========================
+  function update() {
+    const now = new Date();
+    document.getElementById('liveTime').innerText = now.toLocaleDateString(undefined, {weekday:'long', hour:'numeric', minute:'2-digit'});
+    const hr = now.getHours();
+    let g = hr < 12 ? 'Good Morning' : hr < 18 ? 'Good Afternoon' : 'Good Evening';
+    document.getElementById('greetingText').innerText = `${g}, Alex`;
+  }
+  setInterval(update, 1000);
+  update();
+</script>
+
+</body>
+</html>
