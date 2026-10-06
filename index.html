@@ -154,7 +154,7 @@
 
       <div>
         <h1 id="greetingText" class="font-display text-4xl font-bold tracking-tight">
-          Welcome back, Alex
+          Welcome back, N
         </h1>
         <p class="text-textSoft dark:text-slate-400 text-lg mt-1">
           Your workspace is ready for deep work.
@@ -444,7 +444,7 @@
     document.getElementById('liveTime').innerText = now.toLocaleDateString(undefined, {weekday:'long', hour:'numeric', minute:'2-digit'});
     const hr = now.getHours();
     let g = hr < 12 ? 'Good Morning' : hr < 18 ? 'Good Afternoon' : 'Good Evening';
-    document.getElementById('greetingText').innerText = `${g}, Alex`;
+    document.getElementById('greetingText').innerText = `${g}, N`;
   }
   setInterval(update, 1000);
   update();
