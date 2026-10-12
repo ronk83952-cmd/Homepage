@@ -277,10 +277,10 @@
     {name:'Git- movie/tv shows', url:'https://github.com/fmhy/FMHY/wiki/%F0%9F%93%BA-Movies---TV---Anime---Sports/5483aea803468484c0a6df9b5c7b62362fe75d52'}
   ];
 
-  let bookmarks = JSON.parse(localStorage.getItem('sereneBookmarks'));
+  let bookmarks = JSON.parse(localStorage.getItem('sereneBookmarks_v2'));
   if(!bookmarks || bookmarks.length === 0){
     bookmarks = defaultBookmarks;
-    localStorage.setItem('sereneBookmarks', JSON.stringify(bookmarks));
+    localStorage.setItem('sereneBookmarks_v2', JSON.stringify(bookmarks));
   }
 
   let editIndex = null;
@@ -319,7 +319,7 @@
       `;
       grid.appendChild(card);
     });
-    localStorage.setItem('sereneBookmarks', JSON.stringify(bookmarks));
+    localStorage.setItem('sereneBookmarks_v2', JSON.stringify(bookmarks));
   }
 
   renderBookmarks();
